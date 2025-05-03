@@ -1,0 +1,6 @@
+[hello]
+access_token = "xoxb-xxxxxxxxxxxx-xxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx"
+channel = "notifications"
+text = "text message here"
+file = ""
+file_title = ""
