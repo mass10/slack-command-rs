@@ -32,10 +32,8 @@ impl Application {
 			}
 			let task = task.unwrap();
 
-			let access_token = task.access_token.clone();
-
 			// Initialize the application instance.
-			let mut slack = slack::SlackClient::new(&access_token)?;
+			let mut slack = slack::SlackClient::new(&task.access_token)?;
 
 			if task.file.is_some() {
 				// Post text message with file.
