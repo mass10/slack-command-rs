@@ -15,6 +15,10 @@ cargo install --git https://github.com/mass10/rslack-command --branch main
 access_token = "xoxb-xxxxxxxxxxxx-xxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx"
 channel = "notifications"
 text = "text message here"
+# optional
+file = "ファイルのパス"
+# optional
+file_title = "ファイル名"
 ```
 
 ### 起動方法
