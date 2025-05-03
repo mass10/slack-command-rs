@@ -43,7 +43,7 @@ jobs:
                 $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
                 $timestamp_full = Get-Date -Format "yyyy-MM-dd HH:mm:ss K"
 
-                gh.exe release create "build-$timestamp" --title "release, $timestamp_full" --generate-notes rslack-command rslack-command.exe TEMPLATE\setting.toml
+                gh.exe release create "build-$timestamp" --title "release, $timestamp_full" --generate-notes rslack-command rslack-command.exe TEMPLATE\settings.toml
             env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
