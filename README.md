@@ -1,15 +1,15 @@
-# About
+# 概要
 
-Simple CLI for Slack.
+Slack にメッセージを送信する簡単なコマンドです。単一バイナリーファイルで利用できます。開発環境を構築できない、限られた環境などで利用できます。
 
-# Getting Started
+# 始め方
 
-### Install command
+### インストール
 ```bash
 cargo install --git https://github.com/mass10/rslack-command --branch main
 ```
 
-### Create settings.toml like below
+### settings.toml の例
 ```TOML
 [hello]
 access_token = "xoxb-xxxxxxxxxxxx-xxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx"
@@ -17,7 +17,7 @@ channel = "notifications"
 text = "text message here"
 ```
 
-### Run
+### 起動方法
 ```bash
 rslack-command hello
 ```
