@@ -1,22 +1,96 @@
-name: Rust
+name: Create release to make .exe published.
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    # main ブランチに変更が push されたときにジョブを実行します。
+    push:
+        branches: ["main"]
 
-env:
-  CARGO_TERM_COLOR: always
+    # Web UI から手動でトリガーします。
+    workflow_dispatch:
 
 jobs:
-  build:
+    # CREATE RELEASE AND UPLOAD EXECUTABLE FILE
+    create-releases:
+        runs-on: windows-latest
+        needs: [build-on-windows, build-on-linux]
+        permissions:
+            # "write" permission is required to create a release. (NO NEED to grant at repository settings.)
+            contents: write
+        steps:
+            # ========== CHECKOUT REPOSITORY ==========
+          - name: Checkout
+            uses: actions/checkout@v3
+            with:
+                fetch-depth: 1
 
-    runs-on: ubuntu-latest
+            # ========== DOWNLOAD ARTIFACTS ==========
+          - name: Download artifacts
+            uses: actions/download-artifact@v4
+            with:
+                name: my-temporary-artifacts-win
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+            # ========== DOWNLOAD ARTIFACTS ==========
+          - name: Download artifacts
+            uses: actions/download-artifact@v4
+            with:
+                name: my-temporary-artifacts-linux
+
+            # ========== CREATE RELEASE AND UPLOAD EXECUTABLE FILE ==========
+          - name: Create release
+            run: |
+                Set-TimeZone -Id "Tokyo Standard Time"
+
+                $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+                $timestamp_full = Get-Date -Format "yyyy-MM-dd HH:mm:ss K"
+
+                gh.exe release create "build-$timestamp" --title "release, $timestamp_full" --generate-notes rslack-command rslack-command.exe
+            env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            # ========== DELETE ARTIFACTS ==========
+          - name: Delete artifacts
+            run: |
+                curl -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" `
+                "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" -d "{""name"":""artifacts""}"
+
+    # FOR WINDOWS
+    build-on-windows:
+        runs-on: windows-latest
+        steps:
+            # ========== CHECKOUT REPOSITORY ==========
+          - name: Checkout
+            uses: actions/checkout@v3
+            with:
+                fetch-depth: 1
+
+            # ========== BUILD APPLICATION FOR WINDOWS ==========
+          - name: Create the app package
+            run: cargo.exe build --release
+
+            # ========== CREATE ARTIFACTS ==========
+          - name: Create Release
+            uses: actions/upload-artifact@v4
+            with:
+                name: my-temporary-artifacts-win
+                path: target\release\rslack-command.exe
+
+    # FOR LINUX
+    build-on-linux:
+        runs-on: ubuntu-latest
+        steps:
+            # ========== CHECKOUT REPOSITORY ==========
+          - name: Checkout
+            uses: actions/checkout@v3
+            with:
+                fetch-depth: 1
+
+            # ========== BUILD APPLICATION FOR WINDOWS ==========
+          - name: Create the app package
+            run: cargo build --release
+
+            # ========== CREATE ARTIFACTS ==========
+          - name: Create Release
+            uses: actions/upload-artifact@v4
+            with:
+                name: my-temporary-artifacts-linux
+                path: target/release/rslack-command
