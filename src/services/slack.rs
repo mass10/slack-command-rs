@@ -55,7 +55,6 @@ impl SlackClient {
 		let client = reqwest::blocking::Client::new();
 		let response = client
 			.post("https://slack.com/api/chat.postMessage")
-			.header("Content-Type", "multipart/form-data")
 			.header("Authorization", access_token_header)
 			.multipart(form)
 			.send()?;
@@ -98,7 +97,6 @@ impl SlackClient {
 		let client = reqwest::blocking::Client::new();
 		let response = client
 			.post("https://slack.com/api/files.upload")
-			.header("Content-Type", "multipart/form-data")
 			.header("Authorization", access_token_header)
 			.multipart(form)
 			.send()?;
