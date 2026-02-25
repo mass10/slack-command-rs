@@ -13,7 +13,9 @@ extern crate reqwest;
 /// File name.
 pub fn get_file_name(path: &str) -> String {
 	let file = std::path::Path::new(path);
-	return file.file_name().unwrap().to_str().unwrap().to_string();
+	let result = file.file_name().unwrap_or_default();
+	let result = result.to_str().unwrap_or_default();
+	return result.to_string();
 }
 
 ///
